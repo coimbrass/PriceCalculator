@@ -22,12 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const settingsForm = document.getElementById('settings-form');
   const avoidTollsCheckbox = document.getElementById('avoid-tolls');
   const avoidHighwaysCheckbox = document.getElementById('avoid-highways');
-<<<<<<< HEAD
   const detailsBtn = document.getElementById('details-btn');
-=======
-  const breakdownBtn = document.getElementById('breakdown-btn');
-  const breakdownSection = document.getElementById('breakdown-section');
->>>>>>> parent of 9eca4c3 (Update script.js)
 
   // Increase or decrease hours of playing
   increaseHoursBtn.addEventListener('click', () => {
@@ -72,8 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
           totalPriceElement.textContent = `Total Price: $${totalPrice.toFixed(2)}`;
 
-<<<<<<< HEAD
-=======
           breakdownBtn.breakdownDetails = {
             distanceKm,
             travelTimeHours,
@@ -82,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
             costPerWork,
             totalPrice
           };
->>>>>>> parent of 4cb12ed (Update script.js)
         }
       } catch (error) {
         console.error('Error calculating distance:', error);
@@ -93,8 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-<<<<<<< HEAD
-=======
   // Event listener for the "See breakdown" button
   breakdownBtn.addEventListener('click', () => {
     const details = breakdownBtn.breakdownDetails;
@@ -113,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
->>>>>>> parent of 4cb12ed (Update script.js)
   async function fetchDistance(origin, destination, avoidTolls, avoidHighways) {
     const apiKey = 'AIzaSyAf2vMpz8WqBZVrmu4Gx3kArpnQvtlo7bo'; // Replace with your actual API key
     let avoid = [];
