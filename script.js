@@ -82,6 +82,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const response = await fetch(url);
     const data = await response.json();
     
+    // Log the full API response for debugging
+    console.log('Full API Response:', data);
+
     if (data.status !== 'OK') {
       throw new Error(`API returned status: ${data.status}. ${data.error_message || ''}`);
     }
