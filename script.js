@@ -22,7 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const settingsForm = document.getElementById('settings-form');
   const avoidTollsCheckbox = document.getElementById('avoid-tolls');
   const avoidHighwaysCheckbox = document.getElementById('avoid-highways');
-  const detailsBtn = document.getElementById('details-btn');
+  const breakdownBtn = document.getElementById('details-btn');
+  const breakdownSection = document.getElementById('results-section');
 
   // Increase or decrease hours of playing
   increaseHoursBtn.addEventListener('click', () => {
@@ -66,7 +67,13 @@ document.addEventListener('DOMContentLoaded', () => {
           console.log('Total Price:', totalPrice);
 
           totalPriceElement.textContent = `Total Price: $${totalPrice.toFixed(2)}`;
+          resultsSection.style.display = 'block';
 
+<<<<<<< HEAD
+=======
+          resultsSection.classList.remove('hidden');
+
+>>>>>>> parent of 262d6a6 (Update script.js)
           breakdownBtn.breakdownDetails = {
             distanceKm,
             travelTimeHours,
@@ -87,6 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Event listener for the "See breakdown" button
   breakdownBtn.addEventListener('click', () => {
+<<<<<<< HEAD
+=======
+    breakdownSection.classList.toggle('hidden');
+>>>>>>> parent of 262d6a6 (Update script.js)
     const details = breakdownBtn.breakdownDetails;
     if (details) {
       breakdownSection.innerHTML = `
@@ -171,16 +182,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Close the modal
     settingsModal.classList.add('hidden');
-  });
-
-  // Add an event listener to the button
-  detailsBtn.addEventListener('click', function() {
-    // Define what happens when the button is clicked
-    const resultsSection = document.getElementById('results-section');
-    if (resultsSection.classList.contains('hidden')) {
-      resultsSection.classList.remove('hidden');
-    } else {
-      resultsSection.classList.add('hidden');
-    }
   });
 });
