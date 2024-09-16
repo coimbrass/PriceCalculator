@@ -67,38 +67,46 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Fetch distance and time from Google Maps API
   async function fetchDistance(origin, destination, avoidTolls, avoidHighways) {
     const apiKey = 'AIzaSyAf2vMpz8WqBZVrmu4Gx3kArpnQvtlo7bo';
     let avoid = [];
     if (avoidTolls) avoid.push('tolls');
     if (avoidHighways) avoid.push('highways');
-
+  
     const avoidString = avoid.length ? `&avoid=${avoid.join(',')}` : '';
     const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(origin)}&destinations=${encodeURIComponent(destination)}&mode=driving${avoidString}&key=${apiKey}`;
-
+  
     console.log('API Request URL:', url); // Log the full request URL for debugging
-
-    const response = await fetch(url);
-    const data = await response.json();
-    
-    // Log the full API response for debugging
-    console.log('Full API Response:', data);
-
-    if (data.status !== 'OK') {
-      throw new Error(`API returned status: ${data.status}. ${data.error_message || ''}`);
+  
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+  
+      // Log the full API response for debugging
+      console.log('Full API Response:', data);
+  
+      if (data.status !== 'OK') {
+        throw new Error(`API returned status: ${data.status}. ${data.error_message || ''}`);
+      }
+  
+      const result = data.rows[0].elements[0];
+      if (result.status !== 'OK') {
+        throw new Error(`Route error: ${result.status}`);
+      }
+  
+      return {
+        distance: result.distance.value,
+        duration: result.duration.value
+      };
+    } catch (error) {
+      console.error('Error fetching distance:', error);
+      throw error;
     }
-
-    const result = data.rows[0].elements[0];
-    if (result.status !== 'OK') {
-      throw new Error(`Route error: ${result.status}`);
-    }
-
-    return {
-      distance: result.distance.value,
-      duration: result.duration.value
-    };
   }
+  
 
   // Open settings modal
   openSettingsBtn.addEventListener('click', () => {
