@@ -107,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   
+  
 
   // Open settings modal
   openSettingsBtn.addEventListener('click', () => {
