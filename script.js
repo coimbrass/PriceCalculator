@@ -70,9 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const avoidString = avoid.length ? `&avoid=${avoid.join(',')}` : '';
     const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(origin)}&destinations=${encodeURIComponent(destination)}&mode=driving${avoidString}&key=${apiKey}`;
     
-    // Use a CORS proxy
-    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-    const fullUrl = proxyUrl + url;
+    // Use a different CORS proxy
+    const proxyUrl = 'https://api.allorigins.win/get?url=';
+    const fullUrl = proxyUrl + encodeURIComponent(url);
   
     console.log('API Request URL:', fullUrl); // Log the full request URL for debugging
   
@@ -83,14 +83,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       const data = await response.json();
   
-      // Log the full API response for debugging
-      console.log('Full API Response:', data);
+      // Parse the JSON response from the proxy
+      const apiData = JSON.parse(data.contents);
   
-      if (data.status !== 'OK') {
-        throw new Error(`API returned status: ${data.status}. ${data.error_message || ''}`);
+      // Log the full API response for debugging
+      console.log('Full API Response:', apiData);
+  
+      if (apiData.status !== 'OK') {
+        throw new Error(`API returned status: ${apiData.status}. ${apiData.error_message || ''}`);
       }
   
-      const result = data.rows[0].elements[0];
+      const result = apiData.rows[0].elements[0];
       if (result.status !== 'OK') {
         throw new Error(`Route error: ${result.status}`);
       }
@@ -104,11 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
       throw error;
     }
   }
-
-  // Open settings modal
-  openSettingsBtn.addEventListener('click', () => {
-    settingsModal.classList.remove('hidden');
-  });
 
   // Save settings and close modal
   settingsForm.addEventListener('submit', (e) => {
