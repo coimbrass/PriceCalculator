@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } catch (error) {
         console.error('Error calculating distance:', error);
+        alert('Error calculating distance: ' + error.message);
       }
     } else {
       alert('Please enter both start and end locations.');
@@ -61,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   async function fetchDistance(origin, destination, avoidTolls, avoidHighways) {
-    const apiKey = 'AIzaSyAf2vMpz8WqBZVrmu4Gx3kArpnQvtlo7bo';
+    const apiKey = 'YOUR_API_KEY_HERE';
     let avoid = [];
     if (avoidTolls) avoid.push('tolls');
     if (avoidHighways) avoid.push('highways');
@@ -99,8 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
       throw error;
     }
   }
-  
-  
 
   // Open settings modal
   openSettingsBtn.addEventListener('click', () => {
@@ -121,14 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     avoidTolls = avoidTollsCheckbox.checked;
     avoidHighways = avoidHighwaysCheckbox.checked;
 
-    // Close modal
+    // Close the modal
     settingsModal.classList.add('hidden');
-  });
-
-  // Close the modal when clicking outside of the form
-  window.addEventListener('click', function(event) {
-    if (event.target == settingsModal) {
-      settingsModal.classList.add('hidden');
-    }
   });
 });
