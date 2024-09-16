@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const avoidHighwaysCheckbox = document.getElementById('avoid-highways');
   const breakdownBtn = document.getElementById('details-btn');
   const breakdownSection = document.getElementById('results-section');
+  const detailsBtn = document.getElementById('details-btn');
 
   // Increase or decrease hours of playing
   increaseHoursBtn.addEventListener('click', () => {
@@ -53,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const distanceKm = distanceData.distance / 1000;
           const travelTimeHours = distanceData.duration / 3600;
 
-          const costPerKm = distanceKm * pricePerKm * 2 * 2; // Round trip, 2 vehicles
+          const costPerKm = distanceKm * pricePerKm;
           const costPerTravelTime = travelTimeHours * payTravelHour * numMusicians * 2; // Round trip
           const costPerWork = playHours * payWorkHour * numMusicians;
 
@@ -69,19 +70,27 @@ document.addEventListener('DOMContentLoaded', () => {
           totalPriceElement.textContent = `Total Price: $${totalPrice.toFixed(2)}`;
           resultsSection.style.display = 'block';
 
-          
+          resultsSection.classList.remove('hidden');
+
+          breakdownBtn.breakdownDetails = {
+            distanceKm,
+            travelTimeHours,
+            costPerKm,
+            costPerTravelTime,
+            costPerWork,
+            totalPrice
+          };
+
         }
       } catch (error) {
         console.error('Error calculating distance:', error);
-        alert('Error calculating distance: ' + error.message);
-      }
-    } else {
-      alert('Please enter both start and end locations.');
+@ -89,92 +77,84 @@
     }
   });
 
   // Event listener for the "See breakdown" button
   breakdownBtn.addEventListener('click', () => {
+    breakdownSection.classList.toggle('hidden');
     const details = breakdownBtn.breakdownDetails;
     if (details) {
       breakdownSection.innerHTML = `
@@ -167,4 +176,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Close the modal
     settingsModal.classList.add('hidden');
   });
-});   
+
+  // Add an event listener to the button
+  detailsBtn.addEventListener('click', function() {
+    // Define what happens when the button is clicked
+    const resultsSection = document.getElementById('results-section');
+    if (resultsSection.classList.contains('hidden')) {
+      resultsSection.classList.remove('hidden');
+    } else {
+      resultsSection.classList.add('hidden');
+    }
+  });
+});
