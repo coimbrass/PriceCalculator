@@ -46,6 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
     avoidTolls = avoidTollsCheckbox.checked;
     avoidHighways = avoidHighwaysCheckbox.checked;
 
+    resultsSection.classList.add('hidden');
+
+
     if (start && end) {
       try {
         console.log('Calling fetchDistance with:', start, end, avoidTolls, avoidHighways);
