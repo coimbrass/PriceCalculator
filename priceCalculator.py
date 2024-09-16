@@ -174,18 +174,30 @@ class DistanceApp(App):
                     hours = 0
                     minutes = 0
 
+                    print(time_parts)
+
                     if "hour" in time_parts:
                         hour_index = time_parts.index("hour")
+                        hours = float(time_parts[hour_index - 1])
+
+                    if "hours" in time_parts:
+                        hour_index = time_parts.index("hours")
                         hours = float(time_parts[hour_index - 1])
 
                     if "min" in time_parts:
                         minute_index = time_parts.index("min")
                         minutes = float(time_parts[minute_index - 1])
 
+                    if "mins" in time_parts:
+                        minute_index = time_parts.index("mins")
+                        minutes = float(time_parts[minute_index - 1])
+
                     total_travel_hours = hours + (minutes / 60)
+                    print(hours, minutes)
 
                     # Calculando o custo com base no tempo de viagem (ida e volta)
                     cost_time_travel = total_travel_hours * self.pay_travel_hour * self.musicians * 2
+                    #print(cost_time_travel , total_travel_hours, self.pay_travel_hour, self.musicians)
 
                     # Calculando o custo com base no tempo de trabalho
                     cost_work = self.play_hours * self.pay_work_hour * self.musicians
