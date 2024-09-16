@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const distanceKm = distanceData.distance / 1000;
           const travelTimeHours = distanceData.duration / 3600;
 
-          const costPerKm = distanceKm * pricePerKm;
+          const costPerKm = distanceKm * pricePerKm * 2 * 2; // Round trip, 2 vehicles
           const costPerTravelTime = travelTimeHours * payTravelHour * numMusicians * 2; // Round trip
           const costPerWork = playHours * payWorkHour * numMusicians;
 
