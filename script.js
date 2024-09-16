@@ -67,6 +67,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
           totalPriceElement.textContent = `Total Price: $${totalPrice.toFixed(2)}`;
 
+<<<<<<< HEAD
+=======
+          breakdownBtn.breakdownDetails = {
+            distanceKm,
+            travelTimeHours,
+            costPerKm,
+            costPerTravelTime,
+            costPerWork,
+            totalPrice
+          };
+>>>>>>> parent of 4cb12ed (Update script.js)
         }
       } catch (error) {
         console.error('Error calculating distance:', error);
@@ -77,6 +88,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+<<<<<<< HEAD
+=======
+  // Event listener for the "See breakdown" button
+  breakdownBtn.addEventListener('click', () => {
+    const details = breakdownBtn.breakdownDetails;
+    if (details) {
+      breakdownSection.innerHTML = `
+        <p>Distance (km): ${details.distanceKm.toFixed(2)}</p>
+        <p>Travel Time (hours): ${details.travelTimeHours.toFixed(2)}</p>
+        <p>Cost per Km: $${details.costPerKm.toFixed(2)}</p>
+        <p>Cost per Travel Time: $${details.costPerTravelTime.toFixed(2)}</p>
+        <p>Cost per Work: $${details.costPerWork.toFixed(2)}</p>
+        <p>Total Price: $${details.totalPrice.toFixed(2)}</p>
+      `;
+      breakdownSection.style.display = 'block';
+    } else {
+      alert('Please calculate the total price first.');
+    }
+  });
+
+>>>>>>> parent of 4cb12ed (Update script.js)
   async function fetchDistance(origin, destination, avoidTolls, avoidHighways) {
     const apiKey = 'AIzaSyAf2vMpz8WqBZVrmu4Gx3kArpnQvtlo7bo'; // Replace with your actual API key
     let avoid = [];
