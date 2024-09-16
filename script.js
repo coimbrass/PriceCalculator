@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Calculate button
   calculateBtn.addEventListener('click', async () => {
-    const origin = startInput.value;
-    const destination = endInput.value;
+    const origin = startInput.value.trim();
+    const destination = endInput.value.trim();
 
     if (origin && destination) {
       try {
@@ -59,7 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Show results section
         resultsSection.classList.remove('hidden');
       } catch (error) {
-        alert('Error fetching distance. Please check your input.');
+        console.error('API Error:', error);  // Log full error for debugging
+        alert('Error fetching distance: ' + error.message); // Show detailed error
       }
     } else {
       alert('Please enter both start and end locations.');
@@ -74,16 +75,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (avoidHighways) avoid.push('highways');
 
     const avoidString = avoid.length ? `&avoid=${avoid.join(',')}` : '';
-    const response = await fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destination}&mode=driving${avoidString}&key=${apiKey}`);
-    
+    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(origin)}&destinations=${encodeURIComponent(destination)}&mode=driving${avoidString}&key=${apiKey}`;
+
+    console.log('API Request URL:', url); // Log the full request URL for debugging
+
+    const response = await fetch(url);
     const data = await response.json();
-    if (data.rows[0].elements[0].status === 'OK') {
-      const distance = data.rows[0].elements[0].distance.value;
-      const duration = data.rows[0].elements[0].duration.value;
-      return { distance, duration };
-    } else {
-      throw new Error('Invalid locations');
+    
+    if (data.status !== 'OK') {
+      throw new Error(`API returned status: ${data.status}. ${data.error_message || ''}`);
     }
+
+    const result = data.rows[0].elements[0];
+    if (result.status !== 'OK') {
+      throw new Error(`Route error: ${result.status}`);
+    }
+
+    return {
+      distance: result.distance.value,
+      duration: result.duration.value
+    };
   }
 
   // Open settings modal
