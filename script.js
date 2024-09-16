@@ -69,8 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
           totalPriceElement.textContent = `Total Price: $${totalPrice.toFixed(2)}`;
           resultsSection.style.display = 'block';
 
-          resultsSection.classList.remove('hidden');
-
           breakdownBtn.breakdownDetails = {
             distanceKm,
             travelTimeHours,
@@ -91,7 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Event listener for the "See breakdown" button
   breakdownBtn.addEventListener('click', () => {
-    breakdownSection.classList.toggle('hidden');
     const details = breakdownBtn.breakdownDetails;
     if (details) {
       breakdownSection.innerHTML = `
