@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Calculate button event listener
   calculateBtn.addEventListener('click', async () => {
-    const start = startInput.value;
-    const end = endInput.value;
+    const start = startInput.value.trim();
+    const end = endInput.value.trim();
     avoidTolls = avoidTollsCheckbox.checked;
     avoidHighways = avoidHighwaysCheckbox.checked;
 
@@ -69,11 +69,15 @@ document.addEventListener('DOMContentLoaded', () => {
   
     const avoidString = avoid.length ? `&avoid=${avoid.join(',')}` : '';
     const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(origin)}&destinations=${encodeURIComponent(destination)}&mode=driving${avoidString}&key=${apiKey}`;
+    
+    // Use a CORS proxy
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    const fullUrl = proxyUrl + url;
   
-    console.log('API Request URL:', url); // Log the full request URL for debugging
+    console.log('API Request URL:', fullUrl); // Log the full request URL for debugging
   
     try {
-      const response = await fetch(url);
+      const response = await fetch(fullUrl);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
