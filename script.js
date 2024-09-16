@@ -1,9 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
   let playHours = 0;
-  const pricePerKm = 0.38;
-  const payTravelHour = 10;
-  const payWorkHour = 100;
-  const numMusicians = 8;
+
+  // Default values for settings
+  let pricePerKm = 0.38;
+  let payTravelHour = 10;
+  let payWorkHour = 100;
+  let numMusicians = 8;
 
   const startInput = document.getElementById('start-input');
   const endInput = document.getElementById('end-input');
@@ -13,7 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const calculateBtn = document.getElementById('calculate-btn');
   const totalPriceElement = document.getElementById('total-price');
   const resultsSection = document.getElementById('results-section');
-  const detailsBtn = document.getElementById('details-btn');
+  const openSettingsBtn = document.getElementById('open-settings-btn');
+  const settingsModal = document.getElementById('settings-modal');
+  const settingsForm = document.getElementById('settings-form');
 
   // Increase or decrease hours of playing
   increaseHoursBtn.addEventListener('click', () => {
@@ -40,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const distanceKm = distanceData.distance / 1000; // Convert to km
         const travelTime = distanceData.duration / 3600; // Convert to hours
 
-        // Calculate costs
+        // Calculate costs using updated settings
         const costDistance = distanceKm * pricePerKm * 2 * 2;
         const costTravel = travelTime * payTravelHour * numMusicians * 2;
         const costWork = playHours * payWorkHour * numMusicians;
@@ -71,4 +75,23 @@ document.addEventListener('DOMContentLoaded', () => {
       throw new Error('Invalid locations');
     }
   }
+
+  // Open settings modal
+  openSettingsBtn.addEventListener('click', () => {
+    settingsModal.classList.remove('hidden');
+  });
+
+  // Save settings and close modal
+  settingsForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Update values from the form
+    pricePerKm = parseFloat(document.getElementById('price-per-km').value);
+    payTravelHour = parseFloat(document.getElementById('pay-travel-hour').value);
+    payWorkHour = parseFloat(document.getElementById('pay-work-hour').value);
+    numMusicians = parseInt(document.getElementById('num-musicians').value);
+
+    // Close modal
+    settingsModal.classList.add('hidden');
+  });
 });
