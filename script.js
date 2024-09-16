@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let payTravelHour = 10;
   let payWorkHour = 100;
   let numMusicians = 8;
+  let avoidTolls = false;
+  let avoidHighways = false;
 
   const startInput = document.getElementById('start-input');
   const endInput = document.getElementById('end-input');
@@ -18,6 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const openSettingsBtn = document.getElementById('open-settings-btn');
   const settingsModal = document.getElementById('settings-modal');
   const settingsForm = document.getElementById('settings-form');
+  const avoidTollsCheckbox = document.getElementById('avoid-tolls');
+  const avoidHighwaysCheckbox = document.getElementById('avoid-highways');
 
   // Increase or decrease hours of playing
   increaseHoursBtn.addEventListener('click', () => {
@@ -40,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (origin && destination) {
       try {
         // Fetch data from Google Maps API
-        const distanceData = await fetchDistance(origin, destination);
+        const distanceData = await fetchDistance(origin, destination, avoidTolls, avoidHighways);
         const distanceKm = distanceData.distance / 1000; // Convert to km
         const travelTime = distanceData.duration / 3600; // Convert to hours
 
@@ -63,9 +67,15 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Fetch distance and time from Google Maps API
-  async function fetchDistance(origin, destination) {
+  async function fetchDistance(origin, destination, avoidTolls, avoidHighways) {
     const apiKey = 'AIzaSyAf2vMpz8WqBZVrmu4Gx3kArpnQvtlo7bo';
-    const response = await fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destination}&key=${apiKey}`);
+    let avoid = [];
+    if (avoidTolls) avoid.push('tolls');
+    if (avoidHighways) avoid.push('highways');
+
+    const avoidString = avoid.length ? `&avoid=${avoid.join(',')}` : '';
+    const response = await fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destination}&mode=driving${avoidString}&key=${apiKey}`);
+    
     const data = await response.json();
     if (data.rows[0].elements[0].status === 'OK') {
       const distance = data.rows[0].elements[0].distance.value;
@@ -90,6 +100,10 @@ document.addEventListener('DOMContentLoaded', () => {
     payTravelHour = parseFloat(document.getElementById('pay-travel-hour').value);
     payWorkHour = parseFloat(document.getElementById('pay-work-hour').value);
     numMusicians = parseInt(document.getElementById('num-musicians').value);
+
+    // Update checkbox values
+    avoidTolls = avoidTollsCheckbox.checked;
+    avoidHighways = avoidHighwaysCheckbox.checked;
 
     // Close modal
     settingsModal.classList.add('hidden');
