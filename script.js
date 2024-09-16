@@ -84,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } catch (error) {
         console.error('Error calculating distance:', error);
-@ -89,92 +77,84 @@
     }
   });
 
