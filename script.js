@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   async function fetchDistance(origin, destination, avoidTolls, avoidHighways) {
-    const apiKey = 'YOUR_ACTUAL_API_KEY_HERE'; // Replace with your actual API key
+    const apiKey = 'AIzaSyAf2vMpz8WqBZVrmu4Gx3kArpnQvtlo7bo'; // Replace with your actual API key
     let avoid = [];
     if (avoidTolls) avoid.push('tolls');
     if (avoidHighways) avoid.push('highways');
