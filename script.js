@@ -22,8 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const settingsForm = document.getElementById('settings-form');
   const avoidTollsCheckbox = document.getElementById('avoid-tolls');
   const avoidHighwaysCheckbox = document.getElementById('avoid-highways');
-  const breakdownBtn = document.getElementById('details-btn');
-  const breakdownSection = document.getElementById('results-section');
+  const detailsBtn = document.getElementById('details-btn');
 
   // Increase or decrease hours of playing
   increaseHoursBtn.addEventListener('click', () => {
@@ -67,18 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
           console.log('Total Price:', totalPrice);
 
           totalPriceElement.textContent = `Total Price: $${totalPrice.toFixed(2)}`;
-          resultsSection.style.display = 'block';
 
-          resultsSection.classList.remove('hidden');
-
-          breakdownBtn.breakdownDetails = {
-            distanceKm,
-            travelTimeHours,
-            costPerKm,
-            costPerTravelTime,
-            costPerWork,
-            totalPrice
-          };
         }
       } catch (error) {
         console.error('Error calculating distance:', error);
@@ -86,25 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } else {
       alert('Please enter both start and end locations.');
-    }
-  });
-
-  // Event listener for the "See breakdown" button
-  breakdownBtn.addEventListener('click', () => {
-    breakdownSection.classList.toggle('hidden');
-    const details = breakdownBtn.breakdownDetails;
-    if (details) {
-      breakdownSection.innerHTML = `
-        <p>Distance (km): ${details.distanceKm.toFixed(2)}</p>
-        <p>Travel Time (hours): ${details.travelTimeHours.toFixed(2)}</p>
-        <p>Cost per Km: $${details.costPerKm.toFixed(2)}</p>
-        <p>Cost per Travel Time: $${details.costPerTravelTime.toFixed(2)}</p>
-        <p>Cost per Work: $${details.costPerWork.toFixed(2)}</p>
-        <p>Total Price: $${details.totalPrice.toFixed(2)}</p>
-      `;
-      breakdownSection.style.display = 'block';
-    } else {
-      alert('Please calculate the total price first.');
     }
   });
 
@@ -176,5 +145,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Close the modal
     settingsModal.classList.add('hidden');
+  });
+
+  // Add an event listener to the button
+  detailsBtn.addEventListener('click', function() {
+    // Define what happens when the button is clicked
+    const resultsSection = document.getElementById('results-section');
+    if (resultsSection.classList.contains('hidden')) {
+      resultsSection.classList.remove('hidden');
+    } else {
+      resultsSection.classList.add('hidden');
+    }
   });
 });
