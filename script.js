@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!resultsSection.classList.contains('hidden')) {
       resultsSection.classList.add('hidden');
-      
     }
 
     if (start && end) {
