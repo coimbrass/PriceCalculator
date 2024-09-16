@@ -36,31 +36,24 @@ document.addEventListener('DOMContentLoaded', () => {
     hoursDisplay.textContent = playHours;
   });
 
-  // Calculate button
+  // Calculate button event listener
   calculateBtn.addEventListener('click', async () => {
-    const origin = startInput.value.trim();
-    const destination = endInput.value.trim();
+    const start = startInput.value;
+    const end = endInput.value;
+    avoidTolls = avoidTollsCheckbox.checked;
+    avoidHighways = avoidHighwaysCheckbox.checked;
 
-    if (origin && destination) {
+    if (start && end) {
       try {
-        // Fetch data from Google Maps API
-        const distanceData = await fetchDistance(origin, destination, avoidTolls, avoidHighways);
-        const distanceKm = distanceData.distance / 1000; // Convert to km
-        const travelTime = distanceData.duration / 3600; // Convert to hours
-
-        // Calculate costs using updated settings
-        const costDistance = distanceKm * pricePerKm * 2 * 2;
-        const costTravel = travelTime * payTravelHour * numMusicians * 2;
-        const costWork = playHours * payWorkHour * numMusicians;
-
-        const totalCost = costDistance + costTravel + costWork;
-        totalPriceElement.textContent = totalCost.toFixed(2);
-
-        // Show results section
-        resultsSection.classList.remove('hidden');
+        console.log('Calling fetchDistance with:', start, end, avoidTolls, avoidHighways);
+        const distanceData = await fetchDistance(start, end, avoidTolls, avoidHighways);
+        if (distanceData) {
+          const totalPrice = (distanceData.distance / 1000 * pricePerKm) + (playHours * payWorkHour);
+          totalPriceElement.textContent = `Total Price: $${totalPrice.toFixed(2)}`;
+          resultsSection.style.display = 'block';
+        }
       } catch (error) {
-        console.error('API Error:', error);  // Log full error for debugging
-        alert('Error fetching distance: ' + error.message); // Show detailed error
+        console.error('Error calculating distance:', error);
       }
     } else {
       alert('Please enter both start and end locations.');
