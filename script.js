@@ -22,7 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const settingsForm = document.getElementById('settings-form');
   const avoidTollsCheckbox = document.getElementById('avoid-tolls');
   const avoidHighwaysCheckbox = document.getElementById('avoid-highways');
+<<<<<<< HEAD
   const detailsBtn = document.getElementById('details-btn');
+=======
+  const breakdownBtn = document.getElementById('breakdown-btn');
+  const breakdownSection = document.getElementById('breakdown-section');
+>>>>>>> parent of 9eca4c3 (Update script.js)
 
   // Increase or decrease hours of playing
   increaseHoursBtn.addEventListener('click', () => {
