@@ -71,7 +71,21 @@
           <label class="block text-gray-700">Number of Musicians:</label>
           <input id="num-musicians" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md mb-4" value="8">
 
-          <div class="text-center">
+          <!-- Checkboxes for avoiding tolls and highways -->
+          <div class="mt-4">
+            <label class="inline-flex items-center">
+              <input type="checkbox" id="avoid-tolls" class="form-checkbox h-5 w-5 text-blue-600">
+              <span class="ml-2 text-gray-700">Avoid Tolls</span>
+            </label>
+          </div>
+          <div class="mt-4">
+            <label class="inline-flex items-center">
+              <input type="checkbox" id="avoid-highways" class="form-checkbox h-5 w-5 text-blue-600">
+              <span class="ml-2 text-gray-700">Avoid Highways</span>
+            </label>
+          </div>
+
+          <div class="text-center mt-6">
             <button type="submit" class="px-6 py-3 bg-green-600 text-white text-lg font-bold rounded-md">Save Settings</button>
           </div>
         </form>
