@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (error) {
         console.error('Error calculating distance:', error);
     }
+  }
   });
 
   // Event listener for the "See breakdown" button
