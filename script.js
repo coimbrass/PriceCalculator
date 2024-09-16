@@ -48,7 +48,22 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Calling fetchDistance with:', start, end, avoidTolls, avoidHighways);
         const distanceData = await fetchDistance(start, end, avoidTolls, avoidHighways);
         if (distanceData) {
-          const totalPrice = (distanceData.distance / 1000 * pricePerKm) + (playHours * payWorkHour);
+          const distanceKm = distanceData.distance / 1000;
+          const travelTimeHours = distanceData.duration / 3600;
+
+          const costPerKm = distanceKm * pricePerKm;
+          const costPerTravelTime = travelTimeHours * payTravelHour * numMusicians * 2; // Round trip
+          const costPerWork = playHours * payWorkHour * numMusicians;
+
+          const totalPrice = costPerKm + costPerTravelTime + costPerWork;
+
+          console.log('Distance (km):', distanceKm);
+          console.log('Travel Time (hours):', travelTimeHours);
+          console.log('Cost per Km:', costPerKm);
+          console.log('Cost per Travel Time:', costPerTravelTime);
+          console.log('Cost per Work:', costPerWork);
+          console.log('Total Price:', totalPrice);
+
           totalPriceElement.textContent = `Total Price: $${totalPrice.toFixed(2)}`;
           resultsSection.style.display = 'block';
         }
