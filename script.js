@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Fetch distance and time from Google Maps API
   async function fetchDistance(origin, destination) {
-    const apiKey = 'AIzaSyAf2vMpz8WqBZVrmu4Gx3kArpnQvtlo7bo';
+    const apiKey = 'YOUR_GOOGLE_MAPS_API_KEY';
     const response = await fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destination}&key=${apiKey}`);
     const data = await response.json();
     if (data.rows[0].elements[0].status === 'OK') {
@@ -93,5 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Close modal
     settingsModal.classList.add('hidden');
+  });
+
+  // Close the modal when clicking outside of the form
+  window.addEventListener('click', function(event) {
+    if (event.target == settingsModal) {
+      settingsModal.classList.add('hidden');
+    }
   });
 });
