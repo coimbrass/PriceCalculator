@@ -46,9 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
     avoidTolls = avoidTollsCheckbox.checked;
     avoidHighways = avoidHighwaysCheckbox.checked;
 
-    if (!resultsSection.classList.contains('hidden')) {
-      resultsSection.classList.add('hidden');
-    }
+    //if (!resultsSection.classList.contains('hidden')) {
+    //  resultsSection.classList.add('hidden');
+    //}
+
+    resultsSection.style.display = 'none';
 
     if (start && end) {
       try {
