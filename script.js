@@ -16,14 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const decreaseHoursBtn = document.getElementById('decrease-hours');
   const calculateBtn = document.getElementById('calculate-btn');
   const totalPriceElement = document.getElementById('total-price');
-  const resultsSection = document.getElementById('results-section');
   const openSettingsBtn = document.getElementById('open-settings-btn');
   const settingsModal = document.getElementById('settings-modal');
   const settingsForm = document.getElementById('settings-form');
   const avoidTollsCheckbox = document.getElementById('avoid-tolls');
   const avoidHighwaysCheckbox = document.getElementById('avoid-highways');
-  const breakdownBtn = document.getElementById('details-btn');
-  const breakdownSection = document.getElementById('results-section');
+  const resultsSection = document.getElementById('results-section');
   const detailsBtn = document.getElementById('details-btn');
 
   // Increase or decrease hours of playing
@@ -39,76 +37,89 @@ document.addEventListener('DOMContentLoaded', () => {
     hoursDisplay.textContent = playHours;
   });
 
-  // Calculate button event listener
-  calculateBtn.addEventListener('click', async () => {
-    const start = startInput.value.trim();
-    const end = endInput.value.trim();
-    avoidTolls = avoidTollsCheckbox.checked;
-    avoidHighways = avoidHighwaysCheckbox.checked;
+// Calculate button event listener
+calculateBtn.addEventListener('click', async () => {
+  const start = startInput.value.trim();
+  const end = endInput.value.trim();
+  avoidTolls = avoidTollsCheckbox.checked;
+  avoidHighways = avoidHighwaysCheckbox.checked;
 
-    resultsSection.classList.add('hidden');
-    breakdownSection.classList.add('hidden');
+  // Always hide the result section at the start of a new calculation
+  resultsSection.classList.add('hidden'); // Ensure it's hidden before the new calculation
 
-    if (start && end) {
-      try {
-        console.log('Calling fetchDistance with:', start, end, avoidTolls, avoidHighways);
-        const distanceData = await fetchDistance(start, end, avoidTolls, avoidHighways);
-        if (distanceData) {
-          const distanceKm = distanceData.distance / 1000;
-          const travelTimeHours = distanceData.duration / 3600;
+  if (start && end) {
+    try {
+      console.log('Calling fetchDistance with:', start, end, avoidTolls, avoidHighways);
 
-          const costPerKm = distanceKm * pricePerKm * 2 * 2; // Round trip, 2 vehicles
-          const costPerTravelTime = travelTimeHours * payTravelHour * numMusicians * 2; // Round trip
-          const costPerWork = playHours * payWorkHour * numMusicians;
+      // Call the API and fetch distance data
+      const distanceData = await fetchDistance(start, end, avoidTolls, avoidHighways);
 
-          const totalPrice = costPerKm + costPerTravelTime + costPerWork;
+      if (distanceData) {
+        // Parse distance and time values
+        const distanceKm = distanceData.distance / 1000;
+        const travelTimeHours = distanceData.duration / 3600;
 
-          console.log('Distance (km):', distanceKm);
-          console.log('Travel Time (hours):', travelTimeHours);
-          console.log('Cost per Km:', costPerKm);
-          console.log('Cost per Travel Time:', costPerTravelTime);
-          console.log('Cost per Work:', costPerWork);
-          console.log('Total Price:', totalPrice);
+        // Calculate the various costs
+        const costPerKm = distanceKm * pricePerKm * 2 * 2; // Round trip, 2 vehicles
+        const costPerTravelTime = travelTimeHours * payTravelHour * numMusicians * 2; // Round trip
+        const costPerWork = playHours * payWorkHour * numMusicians;
 
-          totalPriceElement.textContent = `Total Price: $${totalPrice.toFixed(2)}`;
-          resultsSection.style.display = 'block';
+        // Total price calculation
+        const totalPrice = costPerKm + costPerTravelTime + costPerWork;
 
-          resultsSection.classList.remove('hidden');
+        // Log values for debugging
+        console.log('Distance (km):', distanceKm);
+        console.log('Travel Time (hours):', travelTimeHours);
+        console.log('Cost per Km:', costPerKm);
+        console.log('Cost per Travel Time:', costPerTravelTime);
+        console.log('Cost per Work:', costPerWork);
+        console.log('Total Price:', totalPrice);
 
-          breakdownBtn.breakdownDetails = {
-            distanceKm,
-            travelTimeHours,
-            costPerKm,
-            costPerTravelTime,
-            costPerWork,
-            totalPrice
-          };
+        // Update total price in UI
+        totalPriceElement.textContent = `Total Price: $${totalPrice.toFixed(2)}`;
 
-        }
-      } catch (error) {
-        console.error('Error calculating distance:', error);
+        // After calculation is done, show the results
+        resultsSection.classList.remove('hidden');
+
+        // Store details for the breakdown
+        detailsBtn.breakdownDetails = {
+          distanceKm,
+          travelTimeHours,
+          costPerKm,
+          costPerTravelTime,
+          costPerWork,
+          totalPrice
+        };
+
+      }
+
+    } catch (error) {
+      console.error('Error calculating distance:', error);
     }
+  } else {
+    alert("Please provide both start and end locations.");
   }
-  });
+});
 
-  // Event listener for the "See breakdown" button
-  breakdownBtn.addEventListener('click', () => {
-    breakdownSection.classList.toggle('hidden');
-    const details = breakdownBtn.breakdownDetails;
-    if (details) {
-      breakdownSection.innerHTML = `
-        <p>Distance (km): ${details.distanceKm.toFixed(2)}</p>
-        <p>Travel Time (hours): ${details.travelTimeHours.toFixed(2)}</p>
-        <p>Cost per Km: €${details.costPerKm.toFixed(2)}</p>
-        <p>Cost per Travel Time: €${details.costPerTravelTime.toFixed(2)}</p>
-        <p>Cost per Work: €${details.costPerWork.toFixed(2)}</p>
-        <p>Total Price: €${details.totalPrice.toFixed(2)}</p>
-      `;
-      breakdownSection.style.display = 'block';
-    } else {
-      alert('Please calculate the total price first.');
-    }
-  });
+// Event listener for the "See breakdown" button
+detailsBtn.addEventListener('click', () => {
+  // Toggle visibility of the results section
+  resultsSection.classList.toggle('hidden');
+  const details = detailsBtn.breakdownDetails;
+  if (details) {
+    resultsSection.innerHTML = `
+      <p>Distance (km): ${details.distanceKm.toFixed(2)}</p>
+      <p>Travel Time (hours): ${details.travelTimeHours.toFixed(2)}</p>
+      <p>Cost per Km: €${details.costPerKm.toFixed(2)}</p>
+      <p>Cost per Travel Time: €${details.costPerTravelTime.toFixed(2)}</p>
+      <p>Cost per Work: €${details.costPerWork.toFixed(2)}</p>
+      <p>Total Price: €${details.totalPrice.toFixed(2)}</p>
+    `;
+  } else {
+    alert('Please calculate the total price first.');
+  }
+});
+
 
   async function fetchDistance(origin, destination, avoidTolls, avoidHighways) {
     const apiKey = 'AIzaSyAf2vMpz8WqBZVrmu4Gx3kArpnQvtlo7bo'; // Replace with your actual API key
@@ -180,14 +191,5 @@ document.addEventListener('DOMContentLoaded', () => {
     settingsModal.classList.add('hidden');
   });
 
-  // Add an event listener to the button
-  detailsBtn.addEventListener('click', function() {
-    // Define what happens when the button is clicked
-    const resultsSection = document.getElementById('results-section');
-    if (resultsSection.classList.contains('hidden')) {
-      resultsSection.classList.remove('hidden');
-    } else {
-      resultsSection.classList.add('hidden');
-    }
-  });
+  
 });
