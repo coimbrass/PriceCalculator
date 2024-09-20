@@ -46,11 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
     avoidTolls = avoidTollsCheckbox.checked;
     avoidHighways = avoidHighwaysCheckbox.checked;
 
-    //if (!resultsSection.classList.contains('hidden')) {
-    //  resultsSection.classList.add('hidden');
-    //}
-
-    resultsSection.style.display = 'none';
+    resultsSection.classList.add('hidden');
+    breakdownSection.classList.add('hidden');
 
     if (start && end) {
       try {
@@ -102,10 +99,10 @@ document.addEventListener('DOMContentLoaded', () => {
       breakdownSection.innerHTML = `
         <p>Distance (km): ${details.distanceKm.toFixed(2)}</p>
         <p>Travel Time (hours): ${details.travelTimeHours.toFixed(2)}</p>
-        <p>Cost per Km: $${details.costPerKm.toFixed(2)}</p>
-        <p>Cost per Travel Time: $${details.costPerTravelTime.toFixed(2)}</p>
-        <p>Cost per Work: $${details.costPerWork.toFixed(2)}</p>
-        <p>Total Price: $${details.totalPrice.toFixed(2)}</p>
+        <p>Cost per Km: €${details.costPerKm.toFixed(2)}</p>
+        <p>Cost per Travel Time: €${details.costPerTravelTime.toFixed(2)}</p>
+        <p>Cost per Work: €${details.costPerWork.toFixed(2)}</p>
+        <p>Total Price: €${details.totalPrice.toFixed(2)}</p>
       `;
       breakdownSection.style.display = 'block';
     } else {
