@@ -10,7 +10,6 @@
   <div class="container mx-auto px-4 py-6">
     <!-- Main Header -->
     <h1 class="text-4xl text-center font-bold mb-6">Music Event Travel Calculator</h1>
-
     <!-- Form Section -->
     <div class="bg-white shadow-lg rounded-lg p-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -49,10 +48,14 @@
     </div>
 
     <!-- Results Section -->
+    <div id="container">
+      <div id="breackdown"></div>    
     <div id="results-section" class="mt-8 hidden">
-      <h2 class="text-3xl font-bold mb-4">Price: <span id="total-price"></span> euros</h2>
+      <h2 class="text-3xl font-bold mb-4">Price: <span id="total-price"></span>€</h2>
       <button id="details-btn" class="px-4 py-2 bg-gray-700 text-white rounded-md">See Breakdown</button>
     </div>
+  </div>
+
 
     <!-- Settings Modal (hidden by default) -->
     <div id="settings-modal" class="fixed inset-0 bg-gray-800 bg-opacity-75 hidden">
