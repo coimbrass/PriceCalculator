@@ -2,9 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let playHours = 0;
 
   // Default values for settings
-  let pricePerKm = 0.38;
-  let payTravelHour = 10;
-  let payWorkHour = 100;
+  let pricePerKm = 0.25;
+  let payTravelHour = 2.5;
+  let payWorkHour = 70;
   let numMusicians = 8;
   let avoidTolls = false;
   let avoidHighways = false;
@@ -61,38 +61,38 @@ document.addEventListener('DOMContentLoaded', () => {
           const distanceKm = distanceData.distance / 1000;
           const travelTimeHours = distanceData.duration / 3600;
 
+          const travelTimeHours_hours = Math.floor(travelTimeHours);
+          const travelTimeHours_minutes = (travelTimeHours - travelTimeHours_hours) * 60;
+
           // Calculate the various costs
           const costPerKm = distanceKm * pricePerKm * 2 * 2; // Round trip, 2 vehicles
           const costPerTravelTime = travelTimeHours * payTravelHour * numMusicians * 2; // Round trip
           const costPerWork = playHours * payWorkHour * numMusicians;
 
-          // Total price calculation
+          // Price calculations
+          const carPayment = costPerKm / 2;
+          const musicianPayment = (costPerWork + costPerTravelTime) / numMusicians;
           const totalPrice = costPerKm + costPerTravelTime + costPerWork;
-
-          // Log values for debugging
-          console.log('Distance (km):', distanceKm);
-          console.log('Travel Time (hours):', travelTimeHours);
-          console.log('Cost per Km:', costPerKm);
-          console.log('Cost per Travel Time:', costPerTravelTime);
-          console.log('Cost per Work:', costPerWork);
-          console.log('Total Price:', totalPrice);
 
           // Update total price in UI
           totalPriceElement.textContent = `${totalPrice.toFixed(2)}`;
 
           // After calculation is done, show the results
           resultsSection.classList.remove('hidden');
-          console.log('Results section removed hidden class');
           
 
           // Store details for the breakdown
           detailsBtn.breakdownDetails = {
-            distanceKm,
-            travelTimeHours,
-            costPerKm,
-            costPerTravelTime,
-            costPerWork,
-            totalPrice
+            distanceKm, //info
+            travelTimeHours, //info
+            travelTimeHours_hours, //info
+            travelTimeHours_minutes, //info
+            costPerKm, //info
+            costPerTravelTime, //musician
+            costPerWork, //musician
+            carPayment, //car payment
+            musicianPayment, //musician payment
+            totalPrice //band payment
           };
 
         }
@@ -115,12 +115,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (details) {
       document.getElementById('breackdown').innerHTML = `
         <div id="breackdown-section">
-        <p id="text-distance">Distance (km): ${details.distanceKm.toFixed(2)}</p>
-        <p>Travel Time (hours): ${details.travelTimeHours.toFixed(2)}</p>
-        <p>Cost per Km: €${details.costPerKm.toFixed(2)}</p>
-        <p>Cost per Travel Time: €${details.costPerTravelTime.toFixed(2)}</p>
+        <p id="text-distance">Distance (ida): ${details.distanceKm.toFixed(2)}km</p>
+        <p>Travel Time (ida): ${details.travelTimeHours_hours.toFixed(0)} hours ${details.travelTimeHours_minutes.toFixed(0)} minutes</p>
+        <p>Cost per Km (ida e volta): €${details.costPerKm.toFixed(2)}</p>
+        <p>Cost per Travel Time (ida e volta): €${details.costPerTravelTime.toFixed(2)}</p>
         <p>Cost per Work: €${details.costPerWork.toFixed(2)}</p>
-        <p>Total Price: €${details.totalPrice.toFixed(2)}</p>
+        <p><strong>Car's Pay: €${details.carPayment.toFixed(2)}</strong></p>
+        <p><strong>Musician's Pay: €${details.musicianPayment.toFixed(2)}</strong></p>
+        <p><strong>Total Price: €${details.totalPrice.toFixed(2)}</strong></p>
         </div>
       `;
     }
