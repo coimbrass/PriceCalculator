@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Default values for settings
   let pricePerKm = 0.25;
   let payTravelHour = 2.5;
-  let payWorkHour = 70;
+  let payWork = 0; //change save as well
   let numMusicians = 8;
   let avoidTolls = false;
   let avoidHighways = false;
@@ -58,6 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (distanceData) {
           // Parse distance and time values
+
+          if (playHours == 0.5) payWork = 50;
+          else if (playHours == 1) payWork = 70;
+          else if (playHours == 1.5) payWork = 90;
+          else if (playHours == 2) payWork = 100;
+          else if (playHours > 2) payWork = 100 + (playHours - 2) * 20;
+
+
           const distanceKm = distanceData.distance / 1000;
           const travelTimeHours = distanceData.duration / 3600;
 
@@ -67,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // Calculate the various costs
           const costPerKm = distanceKm * pricePerKm * 2 * 2; // Round trip, 2 vehicles
           const costPerTravelTime = travelTimeHours * payTravelHour * numMusicians * 2; // Round trip
-          const costPerWork = playHours * payWorkHour * numMusicians;
+          const costPerWork = payWork * numMusicians;
 
           // Price calculations
           const carPayment = costPerKm / 2;
@@ -123,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <p><strong>Car's Pay: €${details.carPayment.toFixed(2)}</strong></p>
         <p><strong>Musician's Pay: €${details.musicianPayment.toFixed(2)}</strong></p>
         <p><strong>Total Price: €${details.totalPrice.toFixed(2)}</strong></p>
-        </div>
+      </div>
       `;
     }
   });
@@ -188,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update values from the form
     pricePerKm = parseFloat(document.getElementById('price-per-km').value);
     payTravelHour = parseFloat(document.getElementById('pay-travel-hour').value);
-    payWorkHour = parseFloat(document.getElementById('pay-work-hour').value);
+    //payWork = parseFloat(document.getElementById('pay-work-hour').value);
     numMusicians = parseInt(document.getElementById('num-musicians').value);
 
     // Update checkbox values
