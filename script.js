@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let avoidTolls = false;
   let avoidHighways = false;
 
-  const startInput = document.getElementById('start-input');
+  const startInputCar1 = document.getElementById('start-input-car1');
+  const startInputCar2 = document.getElementById('start-input-car2');
   const endInput = document.getElementById('end-input');
   const hoursDisplay = document.getElementById('hours-display');
   const increaseHoursBtn = document.getElementById('increase-hours');
@@ -40,7 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Calculate button event listener
   calculateBtn.addEventListener('click', async () => {
 
-    const start = startInput.value.trim();
+    const startCar1 = startInputCar1.value.trim();
+    const startCar2 = startInputCar2.value.trim();
     const end = endInput.value.trim();
     avoidTolls = avoidTollsCheckbox.checked;
     avoidHighways = avoidHighwaysCheckbox.checked;
@@ -49,14 +51,15 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('breackdown-section').remove();
     }
 
-    if (start && end) {
+    if (startCar1 && startCar2 && end) {
       try {
-        console.log('Calling fetchDistance with:', start, end, avoidTolls, avoidHighways);
+        console.log('Calling fetchDistance with:', startCar1, end, avoidTolls, avoidHighways);
 
         // Call the API and fetch distance data
-        const distanceData = await fetchDistance(start, end, avoidTolls, avoidHighways);
+        const distanceData1 = await fetchDistance(startCar1, end, avoidTolls, avoidHighways);
+        const distanceData2 = await fetchDistance(startCar2, end, avoidTolls, avoidHighways);
 
-        if (distanceData) {
+        if (distanceData1 && distanceData2) {
           // Parse distance and time values
 
           if (playHours == 0.5) payWork = 50;
@@ -66,19 +69,29 @@ document.addEventListener('DOMContentLoaded', () => {
           else if (playHours > 2) payWork = 100 + (playHours - 2) * 20;
 
 
-          const distanceKm = distanceData.distance / 1000;
-          const travelTimeHours = distanceData.duration / 3600;
+          const distanceKm1 = distanceData1.distance / 1000;
+          const travelTimeHours1 = distanceData1.duration / 3600;
 
-          const travelTimeHours_hours = Math.floor(travelTimeHours);
-          const travelTimeHours_minutes = (travelTimeHours - travelTimeHours_hours) * 60;
+          const distanceKm2 = distanceData2.distance / 1000;
+          const travelTimeHours2 = distanceData2.duration / 3600;
+
+          let biggerTravelTime = travelTimeHours1 > travelTimeHours2 ? travelTimeHours1 : travelTimeHours2;
+
+          const travelTimeHours_hours1 = Math.floor(travelTimeHours1);
+          const travelTimeHours_minutes1 = (travelTimeHours1 - travelTimeHours_hours1) * 60;
+          const travelTimeHours_hours2 = Math.floor(travelTimeHours2);
+          const travelTimeHours_minutes2 = (travelTimeHours2 - travelTimeHours_hours2) * 60;
 
           // Calculate the various costs
-          const costPerKm = distanceKm * pricePerKm * 2 * 2; // Round trip, 2 vehicles
-          const costPerTravelTime = travelTimeHours * payTravelHour * numMusicians * 2; // Round trip
+          const costPerTravelTime = biggerTravelTime * payTravelHour * numMusicians * 2; // Round trip
+          
           const costPerWork = payWork * numMusicians;
 
           // Price calculations
-          const carPayment = costPerKm / 2;
+          const carPayment1 = distanceKm1 * pricePerKm * 2; // Round trip
+          const carPayment2 = distanceKm2 * pricePerKm * 2; // Round trip
+          const costPerKm = 2 * pricePerKm * (distanceKm1 + distanceKm2); // Round trip, 2 vehicles
+
           const musicianPayment = (costPerWork + costPerTravelTime) / numMusicians;
           const totalPrice = costPerKm + costPerTravelTime + costPerWork;
 
@@ -91,14 +104,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // Store details for the breakdown
           detailsBtn.breakdownDetails = {
-            distanceKm, //info
-            travelTimeHours, //info
-            travelTimeHours_hours, //info
-            travelTimeHours_minutes, //info
+            distanceKm1, //info
+            distanceKm2, //info
+            travelTimeHours1, //info
+            travelTimeHours2, //info
+            travelTimeHours_hours1, //info
+            travelTimeHours_minutes1, //info
+            travelTimeHours_hours2, //info
+            travelTimeHours_minutes2, //info
             costPerKm, //info
             costPerTravelTime, //musician
             costPerWork, //musician
-            carPayment, //car payment
+            carPayment1, //car payment
+            carPayment2, //car payment
             musicianPayment, //musician payment
             totalPrice //band payment
           };
@@ -122,17 +140,23 @@ document.addEventListener('DOMContentLoaded', () => {
     resultsSection.classList.add('hidden');
     if (details) {
       document.getElementById('breackdown').innerHTML = `
-        <div id="breackdown-section">
-        <p id="text-distance">Distance (ida): ${details.distanceKm.toFixed(2)}km</p>
-        <p>Travel Time (ida): ${details.travelTimeHours_hours.toFixed(0)} hours ${details.travelTimeHours_minutes.toFixed(0)} minutes</p>
-        <p>Cost per Km (ida e volta): €${details.costPerKm.toFixed(2)}</p>
-        <p>Cost per Travel Time (ida e volta): €${details.costPerTravelTime.toFixed(2)}</p>
-        <p>Cost per Work: €${details.costPerWork.toFixed(2)}</p>
-        <p><strong>Car's Pay: €${details.carPayment.toFixed(2)}</strong></p>
-        <p><strong>Musician's Pay: €${details.musicianPayment.toFixed(2)}</strong></p>
-        <p><strong>Total Price: €${details.totalPrice.toFixed(2)}</strong></p>
+      <div id="breackdown-section">
+        <p><strong>Carro 1:</strong></p>
+        <p style="white-space: pre;">  Distancia (ida): ${details.distanceKm1.toFixed(2)}km</p>
+        <p style="white-space: pre;">  Tempo de Viajem (ida): ${details.travelTimeHours_hours1.toFixed(0)} hours ${details.travelTimeHours_minutes1.toFixed(0)} minutes</p>
+        <p style="white-space: pre;">  Pagamento do Carro 1: €${details.carPayment1.toFixed(2)}</p>
+        <p><strong>Carro 2:</strong></p>
+        <p style="white-space: pre;">  Distancia (ida): ${details.distanceKm2.toFixed(2)}km</p>
+        <p style="white-space: pre;">  Tempo de Viajem (ida): ${details.travelTimeHours_hours2.toFixed(0)} hours ${details.travelTimeHours_minutes2.toFixed(0)} minutes</p>
+        <p style="white-space: pre;">  Pagamento do Carro 2: €${details.carPayment2.toFixed(2)}</p>
+        <p><br /></p>
+        <p>Custo Total dos Carros: €${details.costPerKm.toFixed(2)}</p>
+        <p>Preço das horas em viajem: €${details.costPerTravelTime.toFixed(2)}</p>
+        <p>Preço do tempo a tocar: €${details.costPerWork.toFixed(2)}</p>  
+        <p><strong>Pagamento por músico: €${details.musicianPayment.toFixed(2)}</strong></p>
+        <p><strong>Preço Total: €${details.totalPrice.toFixed(2)}</strong></p>
       </div>
-      `;
+    `;
     }
   });
 
