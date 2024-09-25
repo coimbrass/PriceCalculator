@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const avoidHighwaysCheckbox = document.getElementById('avoid-highways');
   const resultsSection = document.getElementById('results-section');
   const detailsBtn = document.getElementById('details-btn');
+  const errorMessage = document.getElementById('error-message'); // Elemento para mensagens de erro
 
   // Increase or decrease hours of playing
   increaseHoursBtn.addEventListener('click', () => {
@@ -40,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Calculate button event listener
   calculateBtn.addEventListener('click', async () => {
-
+    errorMessage.style.display = 'none'; // Reset de erros anteriores
     const startCar1 = startInputCar1.value.trim();
     const startCar2 = startInputCar2.value.trim();
     const end = endInput.value.trim();
@@ -125,11 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       } catch (error) {
         console.error('Error calculating distance:', error);
+        errorMessage.textContent = `Erro ao calcular a distância: ${error.message}`;
+        errorMessage.style.display = 'block'; // Exibe a mensagem de erro
       }
     } else {
-      alert("Please provide both start and end locations.");
-    
-  }
+      alert("Por favor, insira os locais de início e fim.");
+    }
   });
 
   // Event listener for the "See breakdown" button
@@ -160,9 +162,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-
   async function fetchDistance(origin, destination, avoidTolls, avoidHighways) {
-    const apiKey = 'AIzaSyAf2vMpz8WqBZVrmu4Gx3kArpnQvtlo7bo'; // Replace with your actual API key
+    const apiKey = 'AIzaSyAf2vMpz8WqBZVrmu4Gx3kArpnQvtlo7bo';
     let avoid = [];
     if (avoidTolls) avoid.push('tolls');
     if (avoidHighways) avoid.push('highways');
@@ -179,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const response = await fetch(fullUrl);
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Erro HTTP! status: ${response.status}`);
       }
       const data = await response.json();
 
@@ -190,12 +191,12 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('Full API Response:', apiData);
 
       if (apiData.status !== 'OK') {
-        throw new Error(`API returned status: ${apiData.status}. ${apiData.error_message || ''}`);
+        throw new Error(`A API retornou status: ${apiData.status}. ${apiData.error_message || ''}`);
       }
 
       const result = apiData.rows[0].elements[0];
       if (result.status !== 'OK') {
-        throw new Error(`Route error: ${result.status}`);
+        throw new Error(`Erro na rota: ${result.status}`);
       }
 
       return {
@@ -203,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
         duration: result.duration.value
       };
     } catch (error) {
-      console.error('Error fetching distance:', error);
+      console.error('Erro ao buscar distância:', error);
       throw error;
     }
   }
@@ -230,6 +231,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Close the modal
     settingsModal.classList.add('hidden');
   });
-
-
 });
