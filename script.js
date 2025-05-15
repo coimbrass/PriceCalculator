@@ -1,3 +1,5 @@
+import { apiKey } from '.env';
+
 document.addEventListener('DOMContentLoaded', () => {
   let playHours = 0;
 
@@ -163,7 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   async function fetchDistance(origin, destination, avoidTolls, avoidHighways) {
-    const apiKey = 'AIzaSyAf2vMpz8WqBZVrmu4Gx3kArpnQvtlo7bo';
     let avoid = [];
     if (avoidTolls) avoid.push('tolls');
     if (avoidHighways) avoid.push('highways');
